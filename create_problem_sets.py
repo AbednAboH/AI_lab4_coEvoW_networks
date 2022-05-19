@@ -145,7 +145,5 @@ class network(DNA):
         # we want the lower number
         self.fitness = 1-sum_of_sets / len(sets)
 
-
-
     def __str__(self):
         pass
