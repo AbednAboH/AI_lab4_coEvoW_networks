@@ -118,20 +118,6 @@ class PureMA(GA_LAB1):
             # fitness given in lecture : 1+(19+....)  explained in "baldwin" in fitness class
             self.population[index].fitnesstype['baldwin'](self.pop_size, tries, num_tries)
 
-    # def lem_bald_learning(self, sub_population, type_of_learning):
-    #     return self.baldwin(sub_population) if type_of_learning else self.lemarckian()
-    # def lemarckian(self, sub_population):
-    #     pass
-    # def select_improve(self):
-    #     # todo: select subset of individuals put them in selected
-    #     selected = self.selection()
-    #     # todo: individual improvment
-    #     # todo: perform learning using memes for every individual in selected
-    #     self.learning(selected)
-    #     # todo: continue with Lemarkian or Baldwin learning
-    #     self.lem_bald_learning(selected)
-    #
-
 
 class HybridMA(PureMA):
     def __init__(self, target, tar_size, pop_size, problem_spec, crosstype, fitnesstype, selection,

@@ -1,34 +1,34 @@
-
 import random
-import sys
-
-import numpy
 
 from fitness_functions import fitness_selector
 from mutations import mutations
 import math
+
+
 # have to fill hash table with different keys when getting the command from main
 
 
 # basic class for all problem sets because fittness and the member of the population are problem specific
-# and we have to eliminate problem specifc parameters from the Genetic algorithem
-# might add mutate !
-def city_dist( city, neighbor):
+# ,and we have to eliminate problem specifc parameters from the Genetic algorithem
+# might dd mutate !
+def city_dist(city, neighbor):
     # calculates euclidean distance between two cities
     dx = city.x - neighbor.x
     dy = city.y - neighbor.y
     distance = math.sqrt(dx ** 2 + dy ** 2)
     return distance
+
+
 class Agent:
     fitnesstype = fitness_selector().select
 
     def __init__(self):
-        self.object =[]
-        self.learning_fitness=0
-        self.algo_huristic=None
+        self.object = []
+        # self.learning_fitness = 0
+        # self.algo_huristic = None
         self.age = 0
         self.fitness = 0
-        self.solution=""
+        self.solution = ""
 
     # creates a member of the population
     def create_object(self, target_size, target):
@@ -36,9 +36,11 @@ class Agent:
 
     def character_creation(self, target_size):
         pass
+
     def Learning_fitness(self, target, target_size, huristic):
         self.learning_fitness = self.fitnesstype[huristic](self, target, target_size)
         return self.learning_fitness
+
     # function to calculate the fitness for this specific problem
 
     def calculate_fittness(self, target, target_size, select_fitness, age_update=True):
@@ -57,7 +59,7 @@ class Agent:
         bstr = ""
         for i in self.object:
             bstr += str(i) + ","
-        bstr+=self.solution
+        bstr += self.solution
         return bstr
 
     def __repr__(self):
@@ -81,7 +83,8 @@ class DNA(Agent):
     def __init__(self):
         Agent.__init__(self)
         self.diversity = 0
-        self.spiecy = 0
+        # self.spiecy = 0
+        self.networks_tested = 0
 
     def create_object(self, target_size, target):
         self.object = []
@@ -100,145 +103,49 @@ class DNA(Agent):
         return ''.join(self.object + other.object)
 
 
-# class for pso problem
-class PSO_prb(DNA):
-    # our object is the initial position , we added 2 parameters that are required
+class Sorting(DNA):
     def __init__(self):
-        DNA.__init__(self)
-        self.velocity = None
-        self.p_best = sys.maxsize
-        self.p_best_object = None
+        super(Sorting, self).__init__()
 
-    def create_special_parameter(self, target_size):
-        self.create_velocity(target_size)
+    def create_object(self, target_size, target):
+        self.object = random.sample([i for i in range(1, target_size + 1)], target_size)
 
-    def create_velocity(self, target_size):
-        self.velocity = [random.random() for i in range(target_size)]
 
-    def calculate_new_position(self):
+class network(DNA):
+    def __init__(self):
+        super(network, self).__init__()
+        depth = 0
+
+    def create_object(self, target_size, target):
+        # todo define how to create the network
+        for i in range(target_size):
+            self.object.append(self.character_creation(target_size))
+
+    def character_creation(self, target_size):
         pass
 
-    def calculate_velocity(self,target, c1, c2, gl_best, w=0.8):
-        cities=target[0]
-        for i in range(len(self.object)):
-            cc1 = c1 * city_dist(cities[self.p_best_object[i]-1] ,cities[self.object[i]-1]) * random.random()
-            cc2 = c2 * city_dist(cities[gl_best[i]-1],cities[self.object[i]-1]) * random.random()
-            self.velocity[i] = self.velocity[i] * w + cc1 + cc2
+    def solve_network(self, set, pop):
+        new_set = pop[set]
+        # todo: think of what a comparator should be !
+        for comperator in self.object:
+            comperator(set)
+        # if the solution is valid update diversity
+        pop[set].diversity += 1 if self.check_solution(set) else 0
+        pop[set].networks_tested += 1
 
-    def __eq__(self, other):
-        DNA.__eq__(self, other)
-        self.velocity = other.velocity
-        self.best_object = other.best_object
+    def check_solution(self, set):
+        pass
+
+    def apply(self, sets, pop):
+        for set in sets:
+            self.solve_network(set, pop)
+        sum_of_sets = 0
+        for set in sets:
+            sum_of_sets += pop[set].diversity
+        # we want the lower number
+        self.fitness = 1-sum_of_sets / len(sets)
+
+
 
     def __str__(self):
-        if self.object == None:
-            return ""
-        else:
-            return super(PSO_prb, self).__str__()
-
-# todo: create new problem set for clark write
-class clark_wright(PSO_prb):
-    def __init__(self):
-        super(clark_wright, self).__init__()
-    def create_object(self, target_size, target):
-        ret = self.clarck_W(target)
-        self.object=ret
-        self.create_special_parameter(target_size)
-
-    def clarck_W(self, target):
-        cities, cost_matrix, dimentions, capacity = target[0], target[1], target[2], target[3]
-        tours = [[0, i, 0] for i in range(1, dimentions)]
-        indexes, savings = self.savings(dimentions, cost_matrix)
-        for i, j in indexes:
-            # if len(tours) == num_vehicles:
-            #     break
-            for tour1 in tours:
-                for tour2 in tours:
-                    if tour1 != tour2:
-                        demand1 = self.tourDemand(tour1, cities)
-                        demand2 = self.tourDemand(tour2, cities)
-                        if demand1 + demand2 > capacity:
-                            continue
-
-                        new_tour = []
-                        if tour1[-2] == i and tour2[1] == j:
-                            new_tour = tour1[:len(tour1) - 1] + tour2[1:]
-                        if tour1[1] == i and tour2[-2] == j:
-                            new_tour = tour2[:len(tour2) - 1] + tour1[1:]
-                        if len(new_tour):
-                            tours.remove(tour1)
-                            tours.remove(tour2)
-                            tours.append(new_tour)
-                            break
-        final_tour = []
-        for tour in tours:
-            final_tour += tour[1:len(tour) - 1]
-        ret = []
-        for t in final_tour:
-            ret.append(t + 1)
-        return ret
-
-    def tourDemand(self,tour,cities):
-        sum = 0
-        for city in tour:
-            sum += cities[city].demand
-        return sum
-
-    def savings(self,dimentions,cost_matrix):
-        # savings for (i, j) = cost(i,0) + cost(0,j) - cost(i,j)
-        # returns list of savings for all city pairs (i, j)
-        savings = {}
-        for i in range(1, dimentions - 1):
-            for j in range(i + 1, dimentions):
-                saved = cost_matrix[0][i] + cost_matrix[0][j] - cost_matrix[i][j]
-                savings[(i, j)] = saved
-
-        sorted_indexes = sorted(savings, key=savings.get, reverse=True)
-        return sorted_indexes, savings
-
-
-    # def calculate_velocity(self, c1, c2, gl_best, w=0.8):
-    #     for i in range(len(self.object)):
-    #         cc1 = c1 * (ord(self.p_best_object[i]) - ord(self.object[i])) * random.random()
-    #         cc2 = c2 * (ord(gl_best[i]) - ord(self.object[i])) * random.random()
-    #         self.velocity[i] = self.velocity[i] * w + cc1 + cc2
-
-
-class nearest_neighbour(PSO_prb):
-    def __init__(self):
-        super(nearest_neighbour, self).__init__()
-    def create_object(self, target_size, target):
-        self.object=self.nn(target)
-        self.create_special_parameter(target_size)
-
-    def nn(self, target):
-        cities, cost_matrix, dimentions, capacity = target[0], target[1], target[2], target[3]
-        available = [i for i in range(1, len(cities))]
-        arr = []
-        city = random.choice(cities[1:])
-        id = city.id - 1
-        arr.append(id + 1)
-        available.remove(id)
-        for i in range(len(cities) - 2):
-            mini = city.neighb[available[0]]
-            index = available[0]
-            for j in available:
-                if city.neighb[j] < mini:
-                    index = j
-                    mini = city.neighb[j]
-            available.remove(index)
-            arr.append(index + 1)
-        return arr
-def ackly_value(dimention):
-    r_min, r_max = -32.768, 32.768
-    yo=32.768*2/10
-    x = numpy.arange(r_min, r_max,yo )
-    x=[k for k in x]
-    return x
-
-class acly(clark_wright):
-    def create_object(self, target_size, target):
-        for i in range(10):
-            self.object.append(self.character_creation(target_size))
-    def character_creation(self, target_size):
-        return random.randrange(-32768, 32768)/1000
+        pass

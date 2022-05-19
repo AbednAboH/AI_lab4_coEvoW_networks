@@ -47,8 +47,8 @@ class algortithem:
             # calculate diversity for each individual
         self.pop_mean = mean / self.pop_size
 
-    def sort_by_fitness(self):
-        self.population = sorted(self.population)
+    def sort_by_fitness(self,population):
+        return sorted(population)
 
 
 
