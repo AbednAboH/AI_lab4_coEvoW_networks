@@ -9,43 +9,20 @@ hash_table = {}
 
 class fitness_selector:
     def __init__(self):
-        self.select = {0: self.distance_fittness, 1: self.bul_pqia,
-                     'baldwin': self.baldwinss,
-                       "fixed": self.fixed_distance}
+        self.select = {0: self.sets_fitness,1:self.networks_fitness}
 
-    def distance_fittness(self, object, target, target_size):
-        fitness = 0
-        for j in range(target_size):
-            fit = ord(object.object[j]) - ord(target[j])
-            fitness += abs(fit)
-        return fitness
+    def sets_fitness(self, object, target, target_size,networks,sets):
 
-    def bul_pqia(self, object, target, target_size):
-        fitness = 0
-        for i in range(target_size):
-            if ord(object.object[i]) != ord(target[i]):
-                fitness += PENALTY if object.object[i] in target else HIGH_PENALTY
-        return fitness
+        for network in networks:
+            network.solve_network(object,target_size)
 
-    def euclidean_distance(self, object, target, target_size=0):
-        # self explanitory
-        sum_of_elements = 0
-        for i in range(len(object)):
-            if type(object[i]) == type(''):
-                sum_of_elements += (ord(object[i]) - ord(target[i])) ** 2
-            else:
-                sum_of_elements += (object[i] - target[i]) ** 2
-        return math.sqrt(sum_of_elements)
+        # print("\ndiversity,num_networks\n", object.diversity,object.networks_tested)
+        object.fitness=100*object.diversity/object.networks_tested
 
-    def fixed_distance(self, object, target, target_size=0):
-        correct = incorrect = 0
+    def networks_fitness(self, object, target, target_size,networks,sets):
+        object.apply( sets,target_size)
+        # print(object.fitness)
+        return object.fitness
 
-        for i in range(len(target)):
-            if object[i] == target[i]:
-                correct += 1
-            elif object[i] != '?':
-                incorrect += 1
-        return correct, incorrect
 
-    def baldwinss(self, pop_size, tries, num_tries):
-        return 1 + ((pop_size - 1) * tries / num_tries)
+

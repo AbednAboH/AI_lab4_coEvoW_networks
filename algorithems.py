@@ -34,10 +34,10 @@ class algortithem:
             citizen = self.prob_spec()
             citizen.create_object(self.target_size,self.target)
 
-            citizen.calculate_fittness(self.target, self.target_size, self.fitnesstype,self.selection)
+            # citizen.calculate_fittness(self.target, self.target_size, self.fitnesstype,self.selection)
             self.population[i] = self.buffer[i] = citizen
         # self.update_fitness_array()
-        self.sort_by_fitness()
+        self.sort_by_fitness(self.population)
 
     def calc_fitness(self):
         mean = 0
@@ -48,7 +48,7 @@ class algortithem:
         self.pop_mean = mean / self.pop_size
 
     def sort_by_fitness(self,population):
-        return sorted(population)
+        return sorted(population,reverse=False)
 
 
 
@@ -68,7 +68,7 @@ class algortithem:
         pass
 
     def stopage(self,i):
-        return self.population[0].fitness == 0
+        return False
 
     def solve(self):
         self.handle_initial_time()
@@ -79,14 +79,14 @@ class algortithem:
             self.algo(i)
             self.output.append(self.solution.fitness)
             self.iter.append(i)
-            # self.handle_prints_time()
+            self.handle_prints_time()
             if self.stopage(i) or i==self.max_iter-1:
-                # print(" number of generations : ",i)
+                print(" number of generations : ",i)
                 self.handle_prints_time()
                 break
 
 
-        return self.output,self.iter
+        return self.output,self.iter,self.solution
 
 
 # print_B = lambda x: print(f" Best:{len(x.object)} ,fittness: {x.fitness} ", end=" ")

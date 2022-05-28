@@ -11,7 +11,7 @@ class selection_methods:
 
     def __init__(self):
         self.method = {RAND: self.random_selection, SUS: self.SUS, RWS: self.RWS,
-                       TOUR: self.tournement}
+                       TOUR: self.tournement,"tour2":self.tournement2}
 
     def random_selection(self, population, fitness_array, k=10):
         # select random places from half the population
@@ -41,7 +41,13 @@ class selection_methods:
         participants2 = sample(population, k1)
         # return minumum from 2 samples
         return min(participants1), min(participants2)
-
+    def tournement2(self, population, fitness_array, k=100):
+        sets=[]
+        for i in range(k):
+            p1,p2=self.tournement(population, fitness_array, k=15)
+            sets.append(p1)
+            sets.append(p2)
+        return sets
     def spin_the_rulette(self, population, mean):
         # spin the wheel:
         fitness_array = numpy.array([1 / linear_scale((citizen.fitness, 0.5, 1)) for citizen in population])
