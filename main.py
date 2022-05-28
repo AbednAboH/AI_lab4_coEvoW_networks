@@ -65,9 +65,9 @@ def plot_network(network):
 
     plt.xlabel('depth')
     plt.title("network")
-    plt.legend()
-    # plt.show()
-    plt.savefig(f"outputs\graph.png")
+    # plt.legend()
+    plt.show()
+    #plt.savefig(f"outputs\graph.png")
     plt.close()
 def create_results_file(name):
     file = open(fr"outputs\{name}\script_output.txt", "r")
@@ -146,11 +146,10 @@ def main():
                            1, mutation, 1, max_iter=max_iter)
 
         overall_time = time.perf_counter()
-        _,iter,solution=solution.solve()
+        yo,iter,solution=solution.solve()
         plot_network(solution.get_depth())
         overall_time = time.perf_counter() - overall_time
         border()
-        print(iter)
         print("Overall runtime :", overall_time)
         border()
 

@@ -65,7 +65,7 @@ class C_genetic_algorithem(algortithem):
 
 
     def fitness(self):
-        new_sets = self.population[:20]
+        new_sets = self.selection_methods.method["tour2"](self.population, self.fitness_array)
         for network in self.sorting_networks:
             # todo :T change selection scheme of which ones to check
             # todo:T apply should sort each set and update the sets fitness and the networks fitness
@@ -164,7 +164,7 @@ class C_genetic_algorithem(algortithem):
         mut_type=2
         print("-----pop------")
         self.fitness()
-        self.sort_by_fitness(self.population)
+        self.population=self.sort_by_fitness(self.population)
         self.sorting_networks= self.sort_by_fitness(self.sorting_networks)
         self.mate(i,fitnesstype,mut_type,self.prob_spec,self.population )  # mate the population together
         self.population, self.buffer = self.buffer, self.population  # // swap buffers
