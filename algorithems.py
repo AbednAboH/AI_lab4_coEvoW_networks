@@ -27,8 +27,11 @@ class algortithem:
         self.max_iter=max_iter
         self.solution = problem_spec()
         self.output=[]
+        self.output2=[]
         self.iter=[]
+        self.solution2 = self.prob_spec()
 
+        self.sorting_networks=[]
     def init_population(self):
         for i in range(self.pop_size):
             citizen = self.prob_spec()
@@ -78,6 +81,7 @@ class algortithem:
             self.iteration += 1
             self.algo(i)
             self.output.append(self.solution.fitness)
+            self.output2.append(self.solution2.fitness)
             self.iter.append(i)
             self.handle_prints_time()
             if self.stopage(i) or i==self.max_iter-1:
@@ -86,7 +90,7 @@ class algortithem:
                 break
 
 
-        return self.output,self.iter,self.solution
+        return self.output,self.iter,self.solution,self.output2,self.solution2,self.sorting_networks,self.population
 
 
 # print_B = lambda x: print(f" Best:{len(x.object)} ,fittness: {x.fitness} ", end=" ")

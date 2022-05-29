@@ -13,7 +13,23 @@ class mutations:
         delta = member.character_create(len(new_options),new_options)
         member.object = member.object[:ipos] + [delta] + member.object[ipos + 1:]
 
-
+    def modify(self, target_size, member, options):
+        # modify
+        size = len(member.object)
+        ipos = random.randint(0, size - 1)
+        bigger = random.choice([0, 1])
+        up_down = random.choice([0, 1])
+        new = member.object[ipos]
+        if bigger:
+            if up_down:
+                new[0] -= 1 if new[0] > 1 else 0
+            else:
+                new[1] += 1 if new[1] < target_size else 0
+        else:
+            if up_down:
+                new[0] += 1 if new[1] > new[0] + 1 else 0
+            else:
+                new[1] -= 1 if new[0] + 1 < new[1] else 0
 
     def swap_mutate(self, target_size, member, character_creation):
         size=len(member.object)

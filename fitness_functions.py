@@ -16,12 +16,10 @@ class fitness_selector:
         for network in networks:
             network.solve_network(object,target_size)
 
-        # print("\ndiversity,num_networks\n", object.diversity,object.networks_tested)
         object.fitness=100*object.diversity/object.networks_tested
 
     def networks_fitness(self, object, target, target_size,networks,sets):
-        object.apply( sets,target_size)
-        # print(object.fitness)
+        object.apply( sets,target_size,target)
         return object.fitness
 
 

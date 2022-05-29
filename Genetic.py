@@ -37,7 +37,8 @@ class C_genetic_algorithem(algortithem):
         self.problem_spec2=problem_spec2
 
         #todo:T define below sol
-        self.num_networks=2000
+        self.num_networks=300
+
         self.options=self.create_options()
         temp = problem_spec2()
         temp.create_object(self.target_size, self.target, self.options)
@@ -69,11 +70,9 @@ class C_genetic_algorithem(algortithem):
         for network in self.sorting_networks:
             # todo :T change selection scheme of which ones to check
             # todo:T apply should sort each set and update the sets fitness and the networks fitness
-            network.apply(new_sets,self.target_size)
-            # print(network.fitness)
+            network.apply(new_sets,self.target_size,self.target)
         for set in self.population:
-            # tested networks that succeeded
-            set.fitness=set.diversity/set.networks_tested if set.networks_tested else set.fitness
+            set.fitness=100*set.diversity/set.networks_tested if set.networks_tested else set.fitness
 
     def propablities_rank_based(self,pop_size,population):
 
@@ -162,7 +161,6 @@ class C_genetic_algorithem(algortithem):
         self.fitness_array=self.propablities_rank_based(len(self.population)-1,self.population)
         fitnesstype=0
         mut_type=2
-        print("-----pop------")
         self.fitness()
         self.population=self.sort_by_fitness(self.population)
         self.sorting_networks= self.sort_by_fitness(self.sorting_networks)
@@ -174,13 +172,12 @@ class C_genetic_algorithem(algortithem):
         mut_type = 1
         self.mate(i, fitnesstype, mut_type, self.problem_spec2,self.sorting_networks)  # mate the population together
         self.solution = self.sorting_networks[0]
-        for i in self.sorting_networks[:20]:
-            print(float(i.fitness))
+        array=numpy.array([i.fitness for i in self.population])
+        self.solution2.fitness=array.mean()
+
         self.sorting_networks, self.buffer = self.buffer, self.sorting_networks  # // swap buffers
 
         self.swap_buffers()
-        # print(self.population)
-        # print(self.solution.apply(self.population, self.target_size))
     def swap_buffers(self):
         self.buffer,self.buffer2=self.buffer2,self.buffer
 
