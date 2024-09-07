@@ -1,6 +1,8 @@
 # AI_lab4_coEvoW_networks
  coevolution wih sorting algorithm praperties to find the lowest number of comparitors 
 firstly we updated the genetic algorithm to support 2 spicies 
+
+
 ![img.png](img.png)
 
 * it now works on both the networks and the solutions and evaluates them based on a selected few of the population
