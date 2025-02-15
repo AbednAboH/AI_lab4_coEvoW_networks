@@ -1,4 +1,4 @@
-# AI_lab4_coEvoW_networks
+# Co-Evolutionary Genetic algorithm Based applied to sorting networks.
 
 ## Project Overview
 
