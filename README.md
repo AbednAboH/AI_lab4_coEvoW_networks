@@ -157,7 +157,8 @@ Users can enhance this project in several ways:
 
 The `outputs/` directory contains logs and visualizations of the co-evolutionary process. Below is an example of a visualization showing the adaptation of sorting networks over generations:
 
-![Co-Evolutionary Process](img.png)
+![16 numbers5_16](https://github.com/user-attachments/assets/0d50172a-1fc9-4629-bb2f-72fae0e1baf7)
+
 
 This image illustrates how sorting networks and problem sets co-evolve, highlighting the effectiveness of the approach.
 
